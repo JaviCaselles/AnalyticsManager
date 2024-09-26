@@ -7,30 +7,50 @@ import com.example.analyticsexample.event.PurchaseEvent
 class ZenitAnalyticsClient() : AnalyticsClient {
 
     override fun logEvent(event: AnalyticsEvent) {
-        when (event) {
-            is PurchaseEvent -> {
-                val purchaseData = ZenitPurchaseData(
-                    event.itemId, event.price, event.currency
-                )
+        try {
+            when (event) {
+                is PurchaseEvent -> {
+                    val purchaseData = ZenitPurchaseData(
+                        event.itemId, event.price, event.currency
+                    )
 
-                // This is the custom Zenit log event
-                println("Analytics - Zenit event: $purchaseData")
-            }
-            is LoginEvent -> {
+                    // This is the custom Zenit log event
+                    println("Analytics - Zenit event: $purchaseData")
+                }
 
-                // This is the custom Zenit log event
-                println("Analytics - Zenit event: ${ZenitLoginData(event.userId)}")
-            }
-            else -> {
+                is LoginEvent -> {
 
-                // This is the custom Zenit log event
-                println("Analytics - Zenit event: ${ZenitGenericEventData(event.name, event.parameters)}")
+                    // This is the custom Zenit log event
+                    println("Analytics - Zenit event: ${ZenitLoginData(event.userId)}")
+                }
+
+                else -> {
+
+                    // This is the custom Zenit log event
+                    println(
+                        "Analytics - Zenit event: ${
+                            ZenitGenericEventData(
+                                event.name,
+                                event.parameters
+                            )
+                        }"
+                    )
+                }
             }
+        } catch (e: Exception) {
+            // Propagate the exception to AnalyticsManager or handle it here
+            throw e
         }
     }
 
     override fun setUserProperty(propertyName: String, value: String) {
-        println("Analytics - Zenit setting user property $propertyName to $value")
+        try {
+            // This is the custom Zenit set user property
+            println("Analytics - Zenit setting user property $propertyName to $value")
+        } catch (e: Exception) {
+            // Propagate the exception to AnalyticsManager or handle it here
+            throw e
+        }
     }
 }
 
